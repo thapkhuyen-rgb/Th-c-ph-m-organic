@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chiến Lược Organic Food TP.HCM - Interactive Strategy Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        bgWarm: '#FDFBF7',
+                        cardBg: '#FFFFFF',
+                        sagePrimary: '#3A6351',
+                        sageDark: '#234234',
+                        sageLight: '#EBF2EE',
+                        terraAccent: '#C86D51',
+                        terraLight: '#FDF0EC',
+                        sandMuted: '#F2EFE9',
+                        charcoalText: '#2B2D42',
+                        slateGray: '#6C757D',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #2B2D42;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F2EFE9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3A6351;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased leading-relaxed custom-scrollbar selection:bg-sagePrimary selection:text-white">
+
+<!-- Chosen Palette: Warm Organic Earth & Sage (Background: #FDFBF7, Primary Sage: #3A6351, Accent Terracotta: #C86D51, Card: #FFFFFF, Text: #2B2D42) -->
+
+<!-- Application Structure Plan:
+    1. Header & Navigation Bar: Responsive header with quick jump navigation tabs to 5 core report pillars, brand title, and quick KPI indicators.
+    2. Executive Dashboard Overview: Quick stats on market size, price point sweet spot, top office ailments, and target locations.
+    3. Module 1: Pathology & Bio-rhythm Map (Bản Đồ Bệnh Học & Tâm Lý):
+       - Interactive selector for 5 Physical Pain Points (GERD, IBS, Visceral Fat, Brain Fog, Sleep/Immune Disruption) with cause-effect diagrams in HTML.
+       - Bio-rhythm energy level chart (Chart.js) showing the 14:00-16:00 Afternoon Slump & Sugar Crash cycle.
+       - Interactive cards for 3 Psychological Paradoxes with tactical solutions.
+    4. Module 2: Customer Personas Matrix (Chân Dung Khách Hàng):
+       - Interactive tabs comparing 3 personas (Gen Z, Mid Manager, Special Diets).
+       - Dynamic Radar/Bar comparison chart of budget, JTBD priority, price sensitivity, and conversion barriers.
+    5. Module 3: Consumption Touchpoints & Price Sensitivity Meter (Hành Vi Chi Tiêu & PSM):
+       - Interactive 4 Golden Hours timeline.
+       - Interactive Price Sensitivity Meter (PSM) line chart showing Doubt, Sweet Spot (65k-85k VND), Premium, and Resistance thresholds.
+       - Dynamic Price Calculator/Simulator for product pricing validation against market benchmarks.
+    6. Module 4: Product Architecture & Market Gap (Kiến Trúc Sản Phẩm & Định Vị):
+       - Defect matrix of current healthy F&B models.
+       - 3 Core Product Concepts interactive cards with ingredient breakdowns.
+       - Interactive "QR Data Transparency Simulator" proving non-greenwashing.
+    7. Module 5: Business Model, Pitfall Avoidance & Go-To-Market (Mô Hình Kinh Doanh & GTM):
+       - Interactive Model Comparison Matrix (Cloud Kitchen vs Kiosk/Smart Fridge vs B2B Canteen) with filtering/sorting.
+       - Pitfalls & Prevention Strategies interactive accordion.
+       - 3-Phase Execution Roadmap interactive timeline.
+-->
+
+<!-- Visualization & Content Choices:
+    1. Afternoon Slump & Energy Level: Goal = Show Bio-rhythm change. Viz = Line Chart (Chart.js Canvas). Interaction = Hover for hormone/sugar impact text.
+    2. Persona Priority Comparison: Goal = Compare 3 target segments across 5 criteria. Viz = Radar / Multi-bar Chart (Chart.js Canvas). Interaction = Toggle persona focus.
+    3. Price Sensitivity Meter (PSM): Goal = Identify 65k-85k VND sweet spot. Viz = Interactive Line Chart (Chart.js Canvas). Interaction = Dynamic price input simulator.
+    4. Model Comparison: Goal = Compare CAPEX/OPEX/Margin/CAC/Retention for 3 delivery models. Viz = HTML/Tailwind Matrix Table with dynamic tab highlights.
+    5. Product QR Code Transparency: Goal = Demonstrate proof against greenwashing. Viz = Simulated Interactive Mobile Card.
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- NAVIGATION HEADER -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-sagePrimary text-white flex items-center justify-center font-bold text-xl shadow-inner">
+                        🌿
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold tracking-widest text-terraAccent uppercase block">Báo Cáo Chiến Lược D2C & B2B</span>
+                        <h1 class="text-base sm:text-lg font-bold text-sageDark leading-tight">ORGANIC FOOD TP.HCM</h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center gap-1 lg:gap-2 text-xs lg:text-sm font-semibold text-charcoalText">
+                    <a href="#pathology" class="px-3 py-2 rounded-lg hover:bg-sageLight hover:text-sagePrimary transition">1. Bệnh Học & Tâm Lý</a>
+                    <a href="#personas" class="px-3 py-2 rounded-lg hover:bg-sageLight hover:text-sagePrimary transition">2. Chân Dung Khách Hàng</a>
+                    <a href="#psm" class="px-3 py-2 rounded-lg hover:bg-sageLight hover:text-sagePrimary transition">3. Chi Tiêu & Giá PSM</a>
+                    <a href="#product" class="px-3 py-2 rounded-lg hover:bg-sageLight hover:text-sagePrimary transition">4. Kiến Trúc Sản Phẩm</a>
+                    <a href="#gtm" class="px-3 py-2 rounded-lg hover:bg-sageLight hover:text-sagePrimary transition">5. Mô Hình & GTM</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg bg-sandMuted text-charcoalText focus:outline-none" aria-label="Toggle Menu">
+                    ☰
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-stone-200 bg-white px-4 py-3 space-y-2 text-sm font-medium">
+            <a href="#pathology" class="block px-3 py-2 rounded-lg hover:bg-sageLight">1. Bệnh Học & Tâm Lý</a>
+            <a href="#personas" class="block px-3 py-2 rounded-lg hover:bg-sageLight">2. Chân Dung Khách Hàng</a>
+            <a href="#psm" class="block px-3 py-2 rounded-lg hover:bg-sageLight">3. Chi Tiêu & Giá PSM</a>
+            <a href="#product" class="block px-3 py-2 rounded-lg hover:bg-sageLight">4. Kiến Trúc Sản Phẩm</a>
+            <a href="#gtm" class="block px-3 py-2 rounded-lg hover:bg-sageLight">5. Mô Hình & GTM</a>
+        </div>
+    </header>
+
+    <!-- HERO / DASHBOARD SUMMARY -->
+    <section class="py-10 sm:py-14 bg-gradient-to-b from-sageLight/60 via-sandMuted/40 to-bgWarm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-8">
+                <span class="px-3 py-1 rounded-full bg-sagePrimary/10 text-sagePrimary font-bold text-xs uppercase tracking-wider">Thị Trường Trọng Điểm: TP. Hồ Chí Minh</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-sageDark mt-3 leading-snug">
+                    Giải Phẫu Thị Trường Thực Phẩm Hữu Cơ Chức Năng Cho Khối Lao Động Đô Thị
+                </h2>
+                <p class="mt-3 text-sm sm:text-base text-slateGray">
+                    Nghiên cứu ứng dụng thông tin y khoa, bối cảnh hạ tầng giao thông - cao ốc và hành vi tiêu dùng tại Quận 1, 3, Bình Thạnh, Quận 7 và TP. Thủ Đức để định hình mô hình F&B bền vững.
+                </p>
+            </div>
+
+            <!-- Key Metric Cards Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm hover:shadow-md transition">
+                    <div class="text-xs font-bold text-slateGray uppercase">Điểm Ngọt Giá Trưa</div>
+                    <div class="text-xl sm:text-2xl font-black text-terraAccent mt-1">65K - 85K <span class="text-xs font-normal text-charcoalText">VNĐ</span></div>
+                    <p class="text-xs text-slateGray mt-1">So với cơm trưa (45-65k) & trà sữa (40-70k)</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm hover:shadow-md transition">
+                    <div class="text-xs font-bold text-slateGray uppercase">Giờ Vàng Hạ Đường Huyết</div>
+                    <div class="text-xl sm:text-2xl font-black text-sagePrimary mt-1">14:30 - 16:00</div>
+                    <p class="text-xs text-slateGray mt-1">Bùng nổ nhu cầu Dopamine & Đồ ăn vặt</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm hover:shadow-md transition">
+                    <div class="text-xs font-bold text-slateGray uppercase">Bệnh Lý Phổ Biến Nhất</div>
+                    <div class="text-xl sm:text-2xl font-black text-sageDark mt-1">GERD & IBS</div>
+                    <p class="text-xs text-slateGray mt-1">Trào ngược, trướng bụng & rối loạn vi sinh</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm hover:shadow-md transition">
+                    <div class="text-xs font-bold text-slateGray uppercase">Mô Hình Đỉnh Lợi Nhuận</div>
+                    <div class="text-xl sm:text-2xl font-black text-terraAccent mt-1">B2B + Smart Fridge</div>
+                    <p class="text-xs text-slateGray mt-1">Biên gộp 35-42%, triệt tiêu phí App 30%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- SECTION 1: PATHOLOGY & PSYCHOLOGY -->
+        <section id="pathology" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-terraAccent inline-block"></span>
+                    <span class="text-xs font-bold text-terraAccent tracking-widest uppercase">Phần 1</span>
+                </div>
+                <h3 class="text-xl sm:text-3xl font-extrabold text-sageDark mt-1">Bản Đồ Bệnh Học, Nhịp Sinh Học & Mâu Thuẫn Tâm Lý</h3>
+                <p class="text-sm sm:text-base text-slateGray mt-2 max-w-4xl">
+                    Môi trường máy lạnh kín (21-23°C, độ ẩm &lt;45%), thói quen ngồi tĩnh tại 7.5 tiếng, và căng thẳng KPI kích hoạt liên tục trục Cortisol (HPA axis). Điều này kết hợp với ô nhiễm $PM_{2.5}$ và thời tiết nhiệt đới thất thường tại TP.HCM tạo nên 5 hội chứng thể chất mãn tính cùng 3 mâu thuẫn tâm lý sâu sắc.
+                </p>
+            </div>
+
+            <!-- Interactive Bio-rhythm Energy & Slump Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 sm:p-8 rounded-2xl border border-stone-200/80 shadow-sm">
+                <div class="lg:col-span-5 space-y-4">
+                    <span class="px-2.5 py-1 rounded bg-terraLight text-terraAccent font-bold text-xs">Phân Tích Cơ Chế Sinh Học</span>
+                    <h4 class="text-lg sm:text-xl font-bold text-sageDark">Chu Kỳ Năng Lượng & Sugar Crash Trong Ngày</h4>
+                    <p class="text-sm text-charcoalText leading-relaxed">
+                        Bữa trưa chứa carbohydrate tinh chế cao ($GI > 70$) như cơm tấm, bún bò làm tăng đột biến glucose máu, kích hoạt tụy tiết quá mức Insulin.
+                    </p>
+                    <div class="p-4 rounded-xl bg-sandMuted text-xs space-y-2">
+                        <div class="font-bold text-sageDark">⚡ Điểm nghẽn 14:00 - 16:00 (Afternoon Slump):</div>
+                        <p class="text-slateGray">Đường huyết rơi thảm hại dưới đáy bình thường + Amino acid nhánh giảm làm Tryptophan vượt hàng rào máu não ➔ Chuyển hóa thành Melatonin & Serotonin gây buồn ngủ dữ dội.</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs text-slateGray pt-2">
+                        <span class="inline-block w-3 h-3 rounded-full bg-sagePrimary"></span> Đường huyết tiêu chuẩn
+                        <span class="inline-block w-3 h-3 rounded-full bg-terraAccent"></span> Đường huyết văn phòng hiện tại
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7">
+                    <div class="chart-container">
+                        <canvas id="energySlumpChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5 Physical Pain Points Interactive Explorer -->
+            <div class="space-y-4">
+                <h4 class="text-lg sm:text-xl font-bold text-sageDark">Top 5 "Nỗi Đau Thể Xác" Phổ Biến Nhất</h4>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-3" id="painPointTabs">
+                    <button onclick="switchPainPoint('gerd')" id="tab-gerd" class="pain-tab p-4 rounded-xl text-left border border-sagePrimary bg-sageLight text-sageDark font-bold text-xs sm:text-sm transition">
+                        💥 Trào Ngược Dạ Dày (GERD)
+                    </button>
+                    <button onclick="switchPainPoint('ibs')" id="tab-ibs" class="pain-tab p-4 rounded-xl text-left border border-stone-200 bg-white text-charcoalText font-bold text-xs sm:text-sm hover:bg-sandMuted transition">
+                        🌪️ Ruột Kích Thích (IBS)
+                    </button>
+                    <button onclick="switchPainPoint('fat')" id="tab-fat" class="pain-tab p-4 rounded-xl text-left border border-stone-200 bg-white text-charcoalText font-bold text-xs sm:text-sm hover:bg-sandMuted transition">
+                        🛟 Mỡ Nội Tạng (Skinny Fat)
+                    </button>
+                    <button onclick="switchPainPoint('fog')" id="tab-fog" class="pain-tab p-4 rounded-xl text-left border border-stone-200 bg-white text-charcoalText font-bold text-xs sm:text-sm hover:bg-sandMuted transition">
+                        🧠 Brain Fog (Sương Mù)
+                    </button>
+                    <button onclick="switchPainPoint('sleep')" id="tab-sleep" class="pain-tab p-4 rounded-xl text-left border border-stone-200 bg-white text-charcoalText font-bold text-xs sm:text-sm hover:bg-sandMuted transition">
+                        🌙 Rối Loạn Giấc Ngủ
+                    </button>
+                </div>
+
+                <!-- Pain Point Detail Content Box -->
+                <div id="painPointContent" class="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <!-- Dynamic Javascript Content Populates Here -->
+                </div>
+            </div>
+
+            <!-- 3 Psychological Paradoxes Grid -->
+            <div class="space-y-4 pt-4">
+                <h4 class="text-lg sm:text-xl font-bold text-sageDark">3 Mâu Thuẫn Nội Tâm & Nghịch Lý Hành Vi</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="px-2.5 py-1 rounded-full bg-sandMuted text-slateGray font-bold text-xs">Mâu Thuẫn 1</span>
+                            <h5 class="text-base font-bold text-sageDark mt-3">Ý Thức vs Năng Lực Thực Thi</h5>
+                            <p class="text-xs text-slateGray mt-2 leading-relaxed">
+                                Nắm rõ tác hại đồ mỡ/đường nhưng thời gian nghỉ trưa quá ngắn (45-60 phút) cùng sự cạn kiệt ý chí (ego depletion) khiến việc chuẩn bị bữa ăn (meal-prep) trở thành gánh nặng. Tốc độ & tiện lợi luôn chiến thắng lý trí.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-stone-100 text-xs font-semibold text-terraAccent">
+                            💡 Lối thoát F&B: Bữa ăn sẵn Ready-to-Eat ship tận chân bàn trước 11:45.
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="px-2.5 py-1 rounded-full bg-sandMuted text-slateGray font-bold text-xs">Mâu Thuẫn 2</span>
+                            <h5 class="text-base font-bold text-sageDark mt-3">Sức Khỏe vs Hoài Nghi Greenwashing</h5>
+                            <p class="text-xs text-slateGray mt-2 leading-relaxed">
+                                Muốn ăn sạch nhưng sợ bị gắn nhãn "đắt đỏ vô lý", sợ vị khô cứng nhạt nhẽo và hoài nghi các mác "100% tự nhiên" tự phong không chứng nhận độc lập.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-stone-100 text-xs font-semibold text-terraAccent">
+                            💡 Lối thoát F&B: Mã QR minh bạch nguồn nông trại + Nấu chậm Sous-vide đậm đà.
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="px-2.5 py-1 rounded-full bg-sandMuted text-slateGray font-bold text-xs">Mâu Thuẫn 3</span>
+                            <h5 class="text-base font-bold text-sageDark mt-3">Kỷ Luật Cá Nhân vs Áp Lực Tập Thể</h5>
+                            <p class="text-xs text-slateGray mt-2 leading-relaxed">
+                                Quyết tâm ăn kiêng xung đột trực tiếp với văn hóa "order chung" trà sữa/ăn vặt xế chiều – vốn là công cụ gắn kết đồng nghiệp và xả stress.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-stone-100 text-xs font-semibold text-terraAccent">
+                            💡 Lối thoát F&B: Tính năng "Đặt Nhóm Miễn Phí Ship" trên D2C App + Kombucha tươi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CUSTOMER PERSONAS -->
+        <section id="personas" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-sagePrimary inline-block"></span>
+                    <span class="text-xs font-bold text-sagePrimary tracking-widest uppercase">Phần 2</span>
+                </div>
+                <h3 class="text-xl sm:text-3xl font-extrabold text-sageDark mt-1">Chân Dung Khách Hàng Mục Tiêu (3 Personas Trọng Điểm)</h3>
+                <p class="text-sm sm:text-base text-slateGray mt-2 max-w-4xl">
+                    Phân tích sâu 3 nhóm dung lượng thị trường lớn nhất tại các cao ốc văn phòng Hạng A/B (Quận 1, 3, Bình Thạnh, Quận 7, TP. Thủ Đức). Phân hóa từ sức hút thương hiệu tức thì (Gen Z) đến bảo đảm giá trị vòng đời khách hàng bền vững (Senior & Kiêng khem).
+                </p>
+            </div>
+
+            <!-- Persona Interactive Cards & Chart Comparison -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left Column: Persona Selector & Profile Details -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="flex rounded-xl bg-sandMuted p-1 gap-1">
+                        <button onclick="selectPersona(1)" id="pTab-1" class="p-tab flex-1 py-2.5 text-center text-xs sm:text-sm font-bold rounded-lg bg-white text-sageDark shadow-sm transition">
+                            Persona 1: Gen Z (22-26t)
+                        </button>
+                        <button onclick="selectPersona(2)" id="pTab-2" class="p-tab flex-1 py-2.5 text-center text-xs sm:text-sm font-bold rounded-lg text-slateGray hover:text-sageDark transition">
+                            Persona 2: Mid-Manager (27-35t)
+                        </button>
+                        <button onclick="selectPersona(3)" id="pTab-3" class="p-tab flex-1 py-2.5 text-center text-xs sm:text-sm font-bold rounded-lg text-slateGray hover:text-sageDark transition">
+                            Persona 3: Special Diet (24-38t)
+                        </button>
+                    </div>
+
+                    <div id="personaCardDetail" class="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200/80 shadow-sm space-y-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Right Column: Priority Radar / Bar Chart Comparison -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <span class="px-2.5 py-1 rounded bg-sageLight text-sagePrimary font-bold text-xs">So Sánh Ưu Tiên Mua Hàng</span>
+                        <h4 class="text-base sm:text-lg font-bold text-sageDark mt-2">Động Lực & Trọng Số Quyết Định</h4>
+                        <p class="text-xs text-slateGray mt-1">Trực quan hóa mức độ quan trọng giữa 5 tiêu chí với từng Persona.</p>
+                    </div>
+
+                    <div class="chart-container my-4">
+                        <canvas id="personaChart"></canvas>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-sandMuted text-xs text-slateGray leading-relaxed">
+                        📌 <strong class="text-sageDark">Chiến Lược Kiến Trúc Product:</strong> Tiếp cận Gen Z qua cữ xế bắt mắt/trend, nhưng giữ chân Mid-Manager & Diet Personas bằng gói ăn tuần ấm nóng có chứng nhận y khoa.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: CONSUMPTION BEHAVIOR & PSM -->
+        <section id="psm" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-terraAccent inline-block"></span>
+                    <span class="text-xs font-bold text-terraAccent tracking-widest uppercase">Phần 3</span>
+                </div>
+                <h3 class="text-xl sm:text-3xl font-extrabold text-sageDark mt-1">Động Thái Chi Tiêu & Điểm Chạm Hành Vi Tiêu Dùng</h3>
+                <p class="text-sm sm:text-base text-slateGray mt-2 max-w-4xl">
+                    Chi tiết 4 khung giờ sinh học vàng phát sinh nhu cầu, cùng phân tích thực nghiệm độ nhạy cảm giá (Price Sensitivity Meter - PSM) để xác định "Điểm Ngọt Thượng Nhật" tối ưu doanh thu.
+                </p>
+            </div>
+
+            <!-- 4 Golden Hours Timeline -->
+            <div class="space-y-4">
+                <h4 class="text-lg sm:text-xl font-bold text-sageDark">Chu Kỳ 4 Khung Giờ Vàng Tiêu Thụ F&B Văn Phòng</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-sagePrimary text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">07:30 - 08:30</div>
+                        <div class="text-xl font-bold text-sageDark mb-1">🌄 Bữa Sáng Vội</div>
+                        <p class="text-xs font-bold text-terraAccent">Grab & Go Tức Thời (&lt;3 phút)</p>
+                        <p class="text-xs text-slateGray mt-2">65% không ăn ở nhà. Ưu tiên sữa hạt đóng chai vô trùng, bánh dinh dưỡng nướng sẵn nạp nhanh năng lượng lên bàn làm việc.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-sagePrimary text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">11:30 - 13:00</div>
+                        <div class="text-xl font-bold text-sageDark mb-1">☀️ Bữa Trưa Chính</div>
+                        <p class="text-xs font-bold text-terraAccent">Cơm Ấm Nóng / Gom Đơn Nhóm</p>
+                        <p class="text-xs text-slateGray mt-2">Chỉ 15% mang cơm nhà. 45% đặt ứng dụng. Thảo luận từ 10:30; giao đúng trước 11:45 mang tính sống còn để không lẹm giờ ngủ trưa.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-terraAccent text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">14:30 - 16:00</div>
+                        <div class="text-xl font-bold text-sageDark mb-1">🍰 Cữ Xế Chiều</div>
+                        <p class="text-xs font-bold text-terraAccent">Bùng Nổ Nhu Cầu Dopamine</p>
+                        <p class="text-xs text-slateGray mt-2">Trùng thời điểm Sugar Crash. Mua bộc phát nhóm. Cần Kombucha ga nhẹ tươi mát hoặc Raw Bites giải tỏa uể oải.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-stone-200/80 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-sagePrimary text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl">18:30 - 20:30</div>
+                        <div class="text-xl font-bold text-sageDark mb-1">🌙 Bữa Tối Phục Hồi</div>
+                        <p class="text-xs font-bold text-terraAccent">Tăng Ca / Tập Luyện Gym-Yoga</p>
+                        <p class="text-xs text-slateGray mt-2">Cần bữa ăn nhẹ bụng, giàu chất xơ hòa tan & nước hầm xương bổ sung Collagen, chống đầy hơi trước khi ngủ muộn.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Sensitivity Meter Chart & Interactive Price Simulator -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 sm:p-8 rounded-2xl border border-stone-200/80 shadow-sm">
+                <div class="lg:col-span-7 space-y-3">
+                    <span class="px-2.5 py-1 rounded bg-sandMuted text-sageDark font-bold text-xs">Nghiên Cứu Động Thái Giá (PSM)</span>
+                    <h4 class="text-lg sm:text-xl font-bold text-sageDark">Biểu Đồ Ngưỡng Giá Chấp Nhận Đối Với Khẩu Phần Organic</h4>
+                    <div class="chart-container">
+                        <canvas id="psmChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 space-y-5 bg-sandMuted/50 p-5 rounded-2xl border border-stone-200">
+                    <h5 class="text-base font-bold text-sageDark">🧮 Mô Phỏng Định Giá & Khả Năng Chấp Nhận</h5>
+                    <p class="text-xs text-slateGray">Thử nghiệm mức giá bạn định bán để xem phản ứng thị trường TP.HCM:</p>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-bold text-charcoalText block mb-1">Chọn Loại Sản Phẩm:</label>
+                            <select id="simType" class="w-full text-xs font-semibold p-2.5 rounded-lg border border-stone-300 bg-white" onchange="calculatePriceSimulator()">
+                                <option value="main">Bữa Ăn Trưa Chính (Ready-to-Eat)</option>
+                                <option value="snack">Thức Uống / Bữa Phụ Chức Năng</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-bold text-charcoalText mb-1">
+                                <span>Mức Giá Dự Kiến:</span>
+                                <span id="simPriceVal" class="text-terraAccent font-extrabold text-sm">75,000 VNĐ</span>
+                            </div>
+                            <input type="range" id="simPriceRange" min="30000" max="180000" step="5000" value="75000" class="w-full accent-sagePrimary cursor-pointer" oninput="calculatePriceSimulator()">
+                        </div>
+                    </div>
+
+                    <!-- Simulator Output Box -->
+                    <div id="simOutput" class="p-4 rounded-xl bg-white border border-stone-200 text-xs space-y-2">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PRODUCT ARCHITECTURE & MARKET GAP -->
+        <section id="product" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-sagePrimary inline-block"></span>
+                    <span class="text-xs font-bold text-sagePrimary tracking-widest uppercase">Phần 4</span>
+                </div>
+                <h3 class="text-xl sm:text-3xl font-extrabold text-sageDark mt-1">Khoảng Trống Thị Trường & Kiến Trúc Sản Phẩm Thực Chứng</h3>
+                <p class="text-sm sm:text-base text-slateGray mt-2 max-w-4xl">
+                    Khắc phục hoàn toàn các điểm yếu của Salad bar lạnh, Eat clean công nghiệp khô nhạt và Detox juice nhiều fructose. Định hình 3 dòng sản phẩm chuẩn y khoa cùng chiến lược minh bạch QR minh chứng nguồn gốc.
+                </p>
+            </div>
+
+            <!-- Market Gap & Existing Defects Matrix -->
+            <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm space-y-4">
+                <h4 class="text-base sm:text-lg font-bold text-sageDark">Phân Tích Lỗ Hổng Của Các Mô Hình Healthy F&B Hiện Hữu</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                    <div class="p-4 rounded-xl bg-terraLight/50 border border-terraAccent/20">
+                        <div class="font-bold text-terraAccent text-sm mb-1">❌ Salad Bar Kiểu Âu</div>
+                        <p class="text-slateGray">Rau sống lạnh tưới sốt béo ngậy gây đầy hơi, lạnh bụng với niêm mạc Á Đông đang nhạy cảm do stress. Thiếu tinh bột chậm nên đói lại sau 1.5 tiếng.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-terraLight/50 border border-terraAccent/20">
+                        <div class="font-bold text-terraAccent text-sm mb-1">❌ Eat Clean Công Nghiệp</div>
+                        <p class="text-slateGray">Ức gà luộc thô, gạo lứt khô ráp, quay vi sóng bị thoái hóa đạm. Thiếu tầng vị thảo mộc tự nhiên khiến vị giác cực kỳ mệt mỏi sau 3 ngày.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-terraLight/50 border border-terraAccent/20">
+                        <div class="font-bold text-terraAccent text-sm mb-1">❌ Nước Ép Detox Juice</div>
+                        <p class="text-slateGray">Lọc bỏ hoàn toàn chất xơ thô, đọng lại Fructose tự do cao ➔ Gây áp lực mỡ gan và kích hoạt sugar crash trầm trọng hơn vào buổi chiều.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-terraLight/50 border border-terraAccent/20">
+                        <div class="font-bold text-terraAccent text-sm mb-1">❌ Nghịch Lý Bao Bì Khay Nhựa</div>
+                        <p class="text-slateGray">Dùng quá nhiều nhựa PET/PP làm người ăn áy náy trước đống rác thải nhựa trên bàn; hoặc dùng hộp bã mía dỏm bị nhũn rò rỉ khi giao mưa ngập.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Core Product Concepts Showcase -->
+            <div class="space-y-4">
+                <h4 class="text-lg sm:text-xl font-bold text-sageDark">3 Định Hướng Dòng Sản Phẩm Hữu Cơ Chuyên Biệt</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Line 1 -->
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:border-sagePrimary transition">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded bg-sageLight text-sagePrimary font-bold text-xs">Concept 1</span>
+                            <h5 class="text-lg font-bold text-sageDark">Functional Snack & Drink</h5>
+                            <p class="text-xs text-slateGray">Thay thế cữ trà sữa/ăn vặt 14:30 - 16:00. Tỉnh táo thần kinh mà không gây tích mỡ.</p>
+                            <ul class="text-xs space-y-1.5 text-charcoalText pt-2">
+                                <li>✨ <strong>Kombucha Shan Tuyết Thảo Dược:</strong> Lên men trà cổ thụ + gừng sả hoa cúc, ga nhẹ êm dạ dày.</li>
+                                <li>🌱 <strong>Sữa Hạt Nảy Mầm Organic:</strong> Hạt sen, macca, yến mạch nảy mầm + enzyme Amylase sinh học.</li>
+                                <li>🍫 <strong>Raw Energy Bites:</strong> Ép lạnh chà là, cacao ngòi, hạt giàu Magie dịu thần kinh.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-stone-100 text-xs font-bold text-sagePrimary">
+                            Mức giá tiêu chuẩn: 38.000 – 48.000 VNĐ
+                        </div>
+                    </div>
+
+                    <!-- Line 2 -->
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:border-sagePrimary transition">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded bg-sageLight text-sagePrimary font-bold text-xs">Concept 2</span>
+                            <h5 class="text-lg font-bold text-sageDark">Clean Warm Comfort Food</h5>
+                            <p class="text-xs text-slateGray">Bữa ăn trưa ấm nóng, mềm mại, chuẩn vị Việt nhưng kiểm soát chỉ số GI & Calories chuẩn xác.</p>
+                            <ul class="text-xs space-y-1.5 text-charcoalText pt-2">
+                                <li>🍚 <strong>Gạo Lứt Mầm ST25 / Quinoa Thảo Mộc:</strong> Nấu mềm dễ tiêu, không gây nặng bụng.</li>
+                                <li>🥩 <strong>Đạm Sous-Vide Chân Không:</strong> Ức gà thảo mộc, phi lê cá sốt tiêu xanh, thăn heo sốt dừa tươi.</li>
+                                <li>🥦 <strong>Nước Sốt Độc Quyền:</strong> Không bột ngọt, không đường tinh luyện, giàu enzyme.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-stone-100 text-xs font-bold text-sagePrimary">
+                            Mức giá tiêu chuẩn: 65.000 – 85.000 VNĐ
+                        </div>
+                    </div>
+
+                    <!-- Line 3 -->
+                    <div class="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm flex flex-col justify-between hover:border-sagePrimary transition">
+                        <div class="space-y-3">
+                            <span class="px-2.5 py-1 rounded bg-terraLight text-terraAccent font-bold text-xs">Concept 3</span>
+                            <h5 class="text-lg font-bold text-sageDark">Gut Health & Bio-Shield Pack</h5>
+                            <p class="text-xs text-slateGray">Phục hồi niêm mạc dạ dày và cân bằng hệ vi sinh đường ruột do căng thẳng mãn tính.</p>
+                            <ul class="text-xs space-y-1.5 text-charcoalText pt-2">
+                                <li>🍲 <strong>Bone Broth Hầm 24H:</strong> Giàu Collagen sinh học, Glutamine & Glycine hàn gắn niêm mạc ruột.</li>
+                                <li>🥣 <strong>Canh Dưỡng Sinh Thực Dưỡng:</strong> Củ sen, nấm đông cô hữu cơ giải độc mát gan.</li>
+                                <li>💊 <strong>Bột Chất Xơ Inulin + Bào Tử Lợi Khuẩn:</strong> Chịu nhiệt Bacillus Subtilis pha uống trước ăn.</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-stone-100 text-xs font-bold text-terraAccent">
+                            Gói tuần / tháng trị liệu chuyên sâu
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive QR Transparency Simulator Component -->
+            <div class="bg-gradient-to-r from-sageDark to-sagePrimary text-white p-6 sm:p-8 rounded-2xl shadow-md grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-7 space-y-3">
+                    <span class="px-2.5 py-1 rounded bg-white/20 text-white font-bold text-xs uppercase tracking-wider">Giải Pháp Minh Bạch Dữ Liệu</span>
+                    <h4 class="text-xl font-extrabold">Minh Bạch Hóa Thành Phần Qua Mã QR Động</h4>
+                    <p class="text-xs sm:text-sm text-sageLight leading-relaxed">
+                        Nói KHÔNG với thuật ngữ tiếp thị mơ hồ ("100% tự nhiên", "chuẩn nhà làm"). Mỗi suất ăn được dán đai niêm phong tích hợp mã QR động. Khách hàng chỉ cần quét camera điện thoại để kiểm chứng dữ liệu thực tế.
+                    </p>
+                    <button onclick="toggleQRModal()" class="mt-2 px-4 py-2.5 rounded-xl bg-terraAccent hover:bg-terraAccent/90 text-white font-bold text-xs transition flex items-center gap-2">
+                        📱 Thử Trải Nghiệm Quét Mã QR Sản Phẩm
+                    </button>
+                </div>
+
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="bg-white text-charcoalText p-4 rounded-xl text-center shadow-lg w-48 space-y-2 cursor-pointer hover:scale-105 transition" onclick="toggleQRModal()">
+                        <div class="w-32 h-32 bg-sandMuted mx-auto rounded-lg flex items-center justify-center font-black text-3xl text-sageDark border-2 border-dashed border-sagePrimary">
+                            📱 QR
+                        </div>
+                        <div class="text-[11px] font-bold text-sageDark">Lô Hàng #ORG-2026-089</div>
+                        <p class="text-[9px] text-slateGray">Click để mở hồ sơ chứng thực</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: BUSINESS MODELS, PITFALLS & GTM -->
+        <section id="gtm" class="scroll-mt-24 space-y-8">
+            <div class="border-b border-stone-200 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-terraAccent inline-block"></span>
+                    <span class="text-xs font-bold text-terraAccent tracking-widest uppercase">Phần 5</span>
+                </div>
+                <h3 class="text-xl sm:text-3xl font-extrabold text-sageDark mt-1">Mô Hình Kinh Doanh, Phòng Tránh Cạm Bẫy & Lộ Trình GTM</h3>
+                <p class="text-sm sm:text-base text-slateGray mt-2 max-w-4xl">
+                    Đánh giá chi tiết tài chính 3 mô hình phân phối, kiểm soát 4 cạm bẫy tử huyệt làm phá sản các startup healthy F&B tại Việt Nam, và chiến lộ trình 3 giai đoạn thâm nhập thị trường tối ưu chi phí.
+                </p>
+            </div>
+
+            <!-- Interactive Business Model Comparison Matrix -->
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-sageDark">So Sánh Độc Quyền 3 Mô Hình Triển Khai</h4>
+                    <div class="text-xs text-slateGray">Bấm vào mô hình để highlight thế mạnh vận hành:</div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse bg-white rounded-2xl border border-stone-200/80 shadow-sm text-xs">
+                        <thead>
+                            <tr class="bg-sandMuted border-b border-stone-200 text-sageDark font-bold">
+                                <th class="p-4">Tiêu Chí Phân Tích</th>
+                                <th class="p-4 cursor-pointer hover:bg-stone-200/60 transition" onclick="highlightModel(1)">Mô Hình A: Cloud Kitchen (Food Apps)</th>
+                                <th class="p-4 cursor-pointer hover:bg-stone-200/60 transition" onclick="highlightModel(2)">Mô Hình B: Kiosk / Tủ Lạnh Smart Fridge Sảnh</th>
+                                <th class="p-4 cursor-pointer hover:bg-stone-200/60 transition" onclick="highlightModel(3)">Mô Hình C: B2B Corporate Wellness Pantry</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100 text-charcoalText">
+                            <tr id="row-capex">
+                                <td class="p-4 font-bold text-sageDark bg-sandMuted/30">Vốn Đầu Tư Ban Đầu (CAPEX)</td>
+                                <td class="p-4 col-1"><strong>Thấp - Trung bình:</strong> 250 - 400 triệu VNĐ (bếp hẻm ven trung tâm)</td>
+                                <td class="p-4 col-2"><strong>TB - Cao:</strong> 50 - 80 triệu/tủ RFID; 120-180 triệu/Kiosk</td>
+                                <td class="p-4 col-3 bg-sageLight/40"><strong>Thấp:</strong> 150 - 250 triệu VNĐ (Tech B2B + Logistics)</td>
+                            </tr>
+                            <tr id="row-opex">
+                                <td class="p-4 font-bold text-sageDark bg-sandMuted/30">Chi Phí Vận Hành (OPEX)</td>
+                                <td class="p-4 col-1 text-terraAccent font-semibold"><strong>Rất Cao:</strong> Hoa hồng sàn 25%-30% + Ads từ khóa</td>
+                                <td class="p-4 col-2"><strong>Trung bình:</strong> Thuê sảnh (15-35tr/tháng) + Tiếp tế sáng</td>
+                                <td class="p-4 col-3 bg-sageLight/40 font-semibold text-sagePrimary"><strong>Tối Ưu:</strong> Không hoa hồng sàn, ship theo batch lô lớn</td>
+                            </tr>
+                            <tr id="row-margin">
+                                <td class="p-4 font-bold text-sageDark bg-sandMuted/30">Biên Lợi Nhuận Gộp (Gross Margin)</td>
+                                <td class="p-4 col-1 text-terraAccent"><strong>Mỏng:</strong> 12% - 18% (sau chiết khấu sàn & freeship)</td>
+                                <td class="p-4 col-2 font-bold text-sagePrimary"><strong>Khá:</strong> 35% - 42% (chủ động hoàn toàn giá)</td>
+                                <td class="p-4 col-3 bg-sageLight/40 font-bold text-sagePrimary"><strong>Bền Vững:</strong> 30% - 38% (sản lượng lô cố định)</td>
+                            </tr>
+                            <tr id="row-cac">
+                                <td class="p-4 font-bold text-sageDark bg-sandMuted/30">Chi Phí Khách Hàng (CAC)</td>
+                                <td class="p-4 col-1"><strong>Cao:</strong> Đốt mã giảm giá, dừng KM là rớt đơn</td>
+                                <td class="p-4 col-2"><strong>Thấp:</strong> Tận dụng traffic tự nhiên người đi lại sảnh</td>
+                                <td class="p-4 col-3 bg-sageLight/40"><strong>Rất Thấp:</strong> Tiếp cận 1 HR Head chốt 100-300 nhân sự</td>
+                            </tr>
+                            <tr id="row-retention">
+                                <td class="p-4 font-bold text-sageDark bg-sandMuted/30">Tỷ Lệ Giữ Chân (Retention)</td>
+                                <td class="p-4 col-1 text-slateGray"><strong>Thấp:</strong> 10% - 15% (đổi quán liên tục)</td>
+                                <td class="p-4 col-2"><strong>Trung bình:</strong> 30% - 45% (tiện lợi thang máy)</td>
+                                <td class="p-4 col-3 bg-sageLight/40 font-bold text-sageDark"><strong>Rất Cao:</strong> 70% - 85% (ngân sách phúc lợi doanh nghiệp)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4 Startup Pitfalls & Prevention Strategies Accordion -->
+            <div class="space-y-4">
+                <h4 class="text-lg sm:text-xl font-bold text-sageDark">4 Cạm Bẫy "Tử Huyệt" & Nguyên Tắc Phòng Ngừa</h4>
+                <div class="space-y-3">
+                    <div class="bg-white rounded-2xl border border-stone-200/80 shadow-sm p-5 cursor-pointer" onclick="toggleAccordion(1)">
+                        <div class="flex justify-between items-center font-bold text-sm text-sageDark">
+                            <span>1. Hao hụt nông sản hữu cơ tươi ngắn ngày (Spoilage >20%)</span>
+                            <span id="accIcon-1" class="text-terraAccent font-bold">┼</span>
+                        </div>
+                        <div id="accBody-1" class="hidden mt-3 text-xs text-slateGray leading-relaxed pt-2 border-t border-stone-100">
+                            <strong class="text-terraAccent">Cạm bẫy:</strong> Không chất bảo quản nên rau ngắn ngày hỏng nhanh gấp 2 lần. Thực đơn quá rộng gây tồn kho rác bộn tiền.<br>
+                            <strong class="text-sagePrimary">Giải pháp:</strong> "Thực đơn động theo mùa" tập trung 5 loại rau nền cốt lõi (Kale, Bó xôi, Cà rốt, Củ dền, Bí đỏ). Sơ chế rửa Ozone + Đóng chân không + Kỹ thuật Sous-vide kéo dài lưu trữ 7-10 ngày tại Cloud Kitchen.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-stone-200/80 shadow-sm p-5 cursor-pointer" onclick="toggleAccordion(2)">
+                        <div class="flex justify-between items-center font-bold text-sm text-sageDark">
+                            <span>2. Cạm bẫy nghiện doanh thu từ Food Apps (App Delivery Trap)</span>
+                            <span id="accIcon-2" class="text-terraAccent font-bold">┼</span>
+                        </div>
+                        <div id="accBody-2" class="hidden mt-3 text-xs text-slateGray leading-relaxed pt-2 border-t border-stone-100">
+                            <strong class="text-terraAccent">Cạm bẫy:</strong> Ảo tưởng tăng trưởng đơn hàng nhưng gánh chiết khấu sàn 25-30% + quảng cáo từ khóa ➔ Càng bán càng âm dòng tiền.<br>
+                            <strong class="text-sagePrimary">Giải pháp:</strong> Food Apps chỉ dùng làm kênh acquisition 3 tháng đầu. Dán Voucher giảm 15% tích điểm khi chuyển hướng sang chốt đơn Mini App Zalo / D2C trực tiếp.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-stone-200/80 shadow-sm p-5 cursor-pointer" onclick="toggleAccordion(3)">
+                        <div class="flex justify-between items-center font-bold text-sm text-sageDark">
+                            <span>3. Đội chi phí bao bì sinh học tự phân hủy (Packaging Overrun)</span>
+                            <span id="accIcon-3" class="text-terraAccent font-bold">┼</span>
+                        </div>
+                        <div id="accBody-3" class="hidden mt-3 text-xs text-slateGray leading-relaxed pt-2 border-t border-stone-100">
+                            <strong class="text-terraAccent">Cạm bẫy:</strong> Trọn bộ bao bì sinh học (hộp bã mía, thìa gỗ, đai giấy) tốn 4.500 - 7.000đ/bộ, chiếm 7-9% giá bán.<br>
+                            <strong class="text-sagePrimary">Giải pháp:</strong> Chuẩn hóa toàn bộ thực đơn vào đúng 2 quy cách hộp duy nhất. Đặt gia công hàng loạt trực tiếp nhà máy nội địa. Thay túi nilon bằng đai giấy niêm phong kiêm nhãn dinh dưỡng (giảm 35% chi phí phụ).
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-stone-200/80 shadow-sm p-5 cursor-pointer" onclick="toggleAccordion(4)">
+                        <div class="flex justify-between items-center font-bold text-sm text-sageDark">
+                            <span>4. Thức ăn biến tính do thời tiết mưa ngập & kẹt xe TP.HCM</span>
+                            <span id="accIcon-4" class="text-terraAccent font-bold">┼</span>
+                        </div>
+                        <div id="accBody-4" class="hidden mt-3 text-xs text-slateGray leading-relaxed pt-2 border-t border-stone-100">
+                            <strong class="text-terraAccent">Cạm bẫy:</strong> kẹt xe làm trễ 45 phút, mưa làm nhũn thức ăn, đọng sương hộp bã mía, tách lớp nước sốt.<br>
+                            <strong class="text-sagePrimary">Giải pháp:</strong> Tách riêng biệt sốt vào hũ độc lập. Hộp bã mía có van thoát hơi 1 chiều chống đọng sương. Giới hạn bán kính giao hàng tối đa 3.5km từ Cloud Kitchen để cam kết dưới 20 phút.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3-Phase GTM Execution Roadmap Timeline -->
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-stone-200/80 shadow-sm space-y-6">
+                <h4 class="text-lg sm:text-xl font-bold text-sageDark">Lộ Trình Triển Khai 3 Giai Đoạn Thâm Nhập Thị Trường</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                    <!-- Phase 1 -->
+                    <div class="p-5 rounded-2xl bg-sandMuted/60 border-l-4 border-sagePrimary space-y-2">
+                        <span class="px-2 py-0.5 rounded bg-sagePrimary text-white font-bold text-[10px]">Tháng 1 - Tháng 6</span>
+                        <h5 class="text-base font-bold text-sageDark">Giai Đoạn 1: Thử Nghiệm Cloud Kitchen Core</h5>
+                        <p class="text-xs text-slateGray">Vận hành 1 Cloud Kitchen giáp Ranh Q1 - Bình Thạnh (Khu Đa Kao / Chân cầu Thủ Thiêm).</p>
+                        <ul class="text-xs space-y-1 text-charcoalText pt-2">
+                            <li>• Hoàn thiện dòng Comfort Food & Kombucha.</li>
+                            <li>• <strong>B2B Activation Sampling:</strong> Tài trợ Healthy Tea Break cho 15 công ty HR target.</li>
+                            <li>• Tối ưu bán kính ship 3km.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="p-5 rounded-2xl bg-sandMuted/60 border-l-4 border-terraAccent space-y-2">
+                        <span class="px-2 py-0.5 rounded bg-terraAccent text-white font-bold text-[10px]">Tháng 7 - Tháng 18</span>
+                        <h5 class="text-base font-bold text-sageDark">Giai Đoạn 2: Mở Rộng Smart Fridge & Group Order</h5>
+                        <p class="text-xs text-slateGray">Dựa trên data đơn hàng, lắp đặt 5-8 Tủ Lạnh Thông Minh / Kiosk tại sảnh tòa nhà mật độ cao.</p>
+                        <ul class="text-xs space-y-1 text-charcoalText pt-2">
+                            <li>• Đẩy Mini App D2C tính năng <strong>Gom Đơn Nhóm Miễn Phí Ship</strong> cho Gen Z.</li>
+                            <li>• Đưa tỷ trọng Food Apps xuống &lt;20%.</li>
+                            <li>• Ra mắt gói Subscription 5 ngày linh hoạt hoãn hủy.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="p-5 rounded-2xl bg-sandMuted/60 border-l-4 border-sageDark space-y-2">
+                        <span class="px-2 py-0.5 rounded bg-sageDark text-white font-bold text-[10px]">Tháng 19 Trở Đi</span>
+                        <h5 class="text-base font-bold text-sageDark">Giai Đoạn 3: Tích Hợp Tech & Nông Trại</h5>
+                        <p class="text-xs text-slateGray">Nâng cấp cá nhân hóa dinh dưỡng & bảo đảm chuỗi cung ứng dài hạn.</p>
+                        <ul class="text-xs space-y-1 text-charcoalText pt-2">
+                            <li>• Công cụ đề xuất thực đơn cá nhân hóa dựa trên chỉ số sức khỏe văn phòng.</li>
+                            <li>• Bao tiêu trực tiếp Hợp tác xã hữu cơ Đà Lạt - Củ Chi.</li>
+                            <li>• Nhân rộng mô hình B2B Canteen cao cấp.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-sageDark text-white py-10 border-t border-stone-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-sageLight">
+            <div class="flex items-center gap-2">
+                <span class="text-lg">🌿</span>
+                <span class="font-bold text-sm text-white">Chiến Lược Organic Food TP.HCM</span>
+            </div>
+            <p>© 2026 Head of Market Research & Product Strategy. Báo cáo độc quyền dựa trên dữ liệu y khoa & bối cảnh đô thị TP.HCM.</p>
+            <div class="flex gap-4">
+                <a href="#pathology" class="hover:underline">Bệnh Học</a>
+                <a href="#personas" class="hover:underline">Personas</a>
+                <a href="#psm" class="hover:underline">Giá PSM</a>
+                <a href="#gtm" class="hover:underline">GTM Roadmap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- QR DATA MODAL SIMULATION -->
+    <div id="qrModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative text-charcoalText animate-fade-in">
+            <button onclick="toggleQRModal()" class="absolute top-4 right-4 text-slateGray hover:text-black font-bold text-lg">✕</button>
+
+            <div class="flex items-center gap-3 border-b border-stone-200 pb-3">
+                <div class="w-10 h-10 rounded-lg bg-sageLight text-sagePrimary font-bold flex items-center justify-center text-xl">
+                    ✅
+                </div>
+                <div>
+                    <h5 class="font-bold text-sageDark text-sm">Xác Thực Nguồn Gốc Lô Hàng</h5>
+                    <p class="text-[11px] text-slateGray">Mã định danh: ORG-2026-089-ST25</p>
+                </div>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+                <div class="p-2.5 rounded-lg bg-sandMuted space-y-1">
+                    <div class="font-bold text-sageDark">🚜 Trang Trại Thu Hoạch:</div>
+                    <p class="text-slateGray">Hợp Tác Xã Organic Đơn Dương, Lâm Đồng (Chứng nhận USDA Organic #849202)</p>
+                </div>
+
+                <div class="p-2.5 rounded-lg bg-sandMuted space-y-1">
+                    <div class="font-bold text-sageDark">🔬 Kiểm Nghiệm Tồn Dư Hóa Chất:</div>
+                    <p class="text-slateGray">Eurofins Vietnam - Khô nhiễm kim loại nặng, 0% dư lượng thuốc bảo vệ thực vật (Cập nhật 18/10/2026).</p>
+                </div>
+
+                <div class="p-2.5 rounded-lg bg-sandMuted space-y-1">
+                    <div class="font-bold text-sageDark">📊 Phân Tích Dinh Dưỡng Thực Tế (Macro):</div>
+                    <div class="grid grid-cols-4 gap-1 text-center font-bold text-sagePrimary pt-1">
+                        <div class="bg-white p-1 rounded">520 kcal<br><span class="text-[9px] font-normal text-slateGray">Năng lượng</span></div>
+                        <div class="bg-white p-1 rounded">38g<br><span class="text-[9px] font-normal text-slateGray">Protein</span></div>
+                        <div class="bg-white p-1 rounded">58g<br><span class="text-[9px] font-normal text-slateGray">Carb GI thấp</span></div>
+                        <div class="bg-white p-1 rounded">12g<br><span class="text-[9px] font-normal text-slateGray">Chất xơ</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="toggleQRModal()" class="w-full py-2.5 rounded-xl bg-sagePrimary text-white font-bold text-xs hover:bg-sageDark transition">
+                Đóng Cửa Sổ Xác Thực
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ----------------------------------------------------
+        // DATA STORAGE & STATE MANAGEMENT
+        // ----------------------------------------------------
+        const painPointData = {
+            gerd: {
+                title: "Trào Ngược Dạ Dày (GERD) & Viêm Trợt Niêm Mạc",
+                causes: "Nhai vội 10-15 phút dưới áp lực công việc + Uống cà phê phin đậm đặc sữa đặc lúc dạ dày rỗng kích thích $HCl$ bào mòn niêm mạc. Ngồi nằm gục bàn trưa gây ép thượng vị.",
+                symptoms: "Ợ nóng, ho khan mãn tính, đắng miệng buổi chiều, vướng cổ họng.",
+                fnbSolution: "Thực đơn ấm nóng chế biến Sous-vide, kết hợp Bone Broth hầm 24h giàu Glutamine tái tạo màng niêm mạc."
+            },
+            ibs: {
+                title: "Hội Chứng Ruột Kích Thích (IBS) & Loạn Khuẩn Ruột",
+                causes: "Căng thẳng HPA axis kích hoạt co thắt ruột. Dùng thức ăn đường phố chiên dầu lại nhiều lần + Thiếu chất xơ hòa tan làm suy thoái thảm vi sinh.",
+                symptoms: "Đau bụng co thắt sau ăn trưa, chướng bụng đầy hơi suốt buổi chiều, tiêu chảy/táo bón xen kẽ.",
+                fnbSolution: "Cung cấp Kombucha thảo dược lên men nhẹ + Bột chất xơ hòa tan Inulin & bào tử lợi khuẩn Bacillus subtilis."
+            },
+            fat: {
+                title: "Tích Mỡ Nội Tạng & Gan Nhiễm Mỡ (Skinny Fat)",
+                causes: "Ngồi cố định 7.5 tiếng giảm hoạt tính Enzyme Lipoprotein Lipase. Ăn trưa Carb GI > 70 (cơm tấm, bún) làm vọt Insulin đẩy glucose dư vào mạc treo.",
+                symptoms: "Bụng dưới to phình dù tay chân gầy, mệt mỏi sau ăn, chỉ số mỡ máu tăng ở tuổi 25-35.",
+                fnbSolution: "Sử dụng tinh bột chuyển hóa chậm (Gạo lứt mầm ST25, Quinoa) giữ đường huyết phẳng dẹt."
+            },
+            fog: {
+                title: "Brain Fog (Sương Mù Brain) & Afternoon Slump 14:00-16:00",
+                causes: "Sugar crash sau bữa trưa nhiều đường đơn + Tryptophan vượt hàng rào máu não chuyển hóa thành Melatonin gây buồn ngủ dữ dội.",
+                symptoms: "Mất tập trung, chậm chạp xử lý dữ liệu, uể oải thèm trà sữa/đồ ngọt tức thì.",
+                fnbSolution: "Thay thế trà sữa bằng Kombucha ga nhẹ tươi mát hoặc Bánh thô Raw Energy Bites giàu Magie."
+            },
+            sleep: {
+                title: "Rối Loạn Nhịp Thức Ngủ & Suy Giảm Miễn Dịch",
+                causes: "Ánh sáng xanh laptop/điện thoại ức chế Melatonin + Caffeine liều cao cữ chiều muộn kéo dài thời gian bán thải đến nửa đêm.",
+                symptoms: "Giấc ngủ phân mảnh, sáng dậy mệt mỏi, dễ cảm cúm viêm mũi khi đổi thời tiết TP.HCM.",
+                fnbSolution: "Nước hầm dưỡng sinh củ sen nấm đông cô buổi tối, cắt giảm caffeine sau 15:00."
+            }
+        };
+
+        const personaData = {
+            1: {
+                title: "Gen Z Văn Phòng Mới Đi Làm (22 - 26 tuổi)",
+                role: "Marketing, Creative, Dev tại Startup/Agency (Q1, Bình Thạnh, Thủ Đức)",
+                income: "12 - 22 Triệu VNĐ/tháng",
+                budget: "90.000 - 140.000 VNĐ/ngày (Ăn trưa + Nước xế)",
+                jtbd: "Duy trì vóc dáng, sáng da, kiềm mụn nội tiết, nạp năng lượng nhanh, hình ảnh bao bì đẹp để đăng mạng xã hội.",
+                barriers: "Nhạy cảm giá cao; dễ chán vị nhạt nhẽo; bị cám dỗ bởi trà sữa & đồ ăn vặt đậm đà đường phố.",
+                touchpoints: "TikTok Shorts, Instagram Reels, Mã Group Order trên D2C App, Tủ Smart Fridge tại sảnh."
+            },
+            2: {
+                title: "Quản Lý Cấp Trung / Senior (27 - 35 tuổi)",
+                role: "Trưởng phòng, PM, Director tại MNCs, Ngân hàng (Q1, Q3, Q7)",
+                income: "30 - 60+ Triệu VNĐ/tháng",
+                budget: "180.000 - 300.000 VNĐ/ngày (Sẵn sàng trả giá cao cho tiện ích)",
+                jtbd: "Chữa lành các triệu chứng dạ dày, trào ngược, giảm mỡ bụng; tiết kiệm thời gian ra quyết định ăn uống.",
+                barriers: "Hoài nghi Greenwashing tẩy xanh; không có thời gian tìm hiểu; yêu cầu khắt khe về thời gian giao hàng đúng giờ.",
+                touchpoints: "B2B Corporate Canteen, Event HR Wellness, Mini App đăng ký gói tuần 5 ngày linh hoạt."
+            },
+            3: {
+                title: "Khách Kiêng Khem Đặc Thù (24 - 38 tuổi)",
+                role: "Nhân sự nữ PCOS, Tiểu đường thai kỳ, Nhạy cảm Lactose/Gluten",
+                income: "18 - 45 Triệu VNĐ/tháng",
+                budget: "150.000 - 250.000 VNĐ/ngày (Chi tiêu ổn định)",
+                jtbd: "An toàn sinh học tuyệt đối: không gây tăng đường huyết, không dị ứng lactose/gluten, minh bạch Macro/Calo.",
+                barriers: "Sợ rủi ro nhiễm chéo nguyên liệu; thực đơn ăn kiêng trên thị trường quá đơn điệu khô cứng.",
+                touchpoints: "Cộng đồng dinh dưỡng trị liệu, Giới thiệu từ Bác sĩ/HLV Gym, Website có bộ lọc thành phần cá nhân hóa."
+            }
+        };
+
+        let energyChart, personaChartInstance, psmChartInstance;
+
+        // ----------------------------------------------------
+        // DOM INITIALIZATION
+        // ----------------------------------------------------
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mobile Menu Toggle
+            document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+                document.getElementById('mobileMenu').classList.toggle('hidden');
+            });
+
+            // Initialize Pain Point Tab
+            switchPainPoint('gerd');
+
+            // Initialize Persona Tab
+            selectPersona(1);
+
+            // Initialize Charts
+            initEnergyChart();
+            initPersonaChart();
+            initPSMChart();
+
+            // Initialize Price Simulator
+            calculatePriceSimulator();
+        });
+
+        // ----------------------------------------------------
+        // MODULE 1 LOGIC: PAIN POINT SWITCHER
+        // ----------------------------------------------------
+        function switchPainPoint(key) {
+            const data = painPointData[key];
+            const contentBox = document.getElementById('painPointContent');
+
+            // Update Tab Styles
+            document.querySelectorAll('.pain-tab').forEach(tab => {
+                tab.classList.remove('border-sagePrimary', 'bg-sageLight', 'text-sageDark');
+                tab.classList.add('border-stone-200', 'bg-white', 'text-charcoalText');
+            });
+
+            const activeTab = document.getElementById(`tab-${key}`);
+            activeTab.classList.remove('border-stone-200', 'bg-white', 'text-charcoalText');
+            activeTab.classList.add('border-sagePrimary', 'bg-sageLight', 'text-sageDark');
+
+            // Render Content
+            contentBox.innerHTML = `
+                <div class="space-y-3 animate-fade-in">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-terraAccent text-white font-bold text-xs">Cơ Chế Bệnh Lý</span>
+                        <h4 class="text-base sm:text-lg font-bold text-sageDark">${data.title}</h4>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs">
+                        <div class="p-4 rounded-xl bg-sandMuted/60 space-y-1">
+                            <div class="font-bold text-terraAccent">⚠️ Nguyên Nhân Bối Cảnh:</div>
+                            <p class="text-slateGray leading-relaxed">${data.causes}</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-sandMuted/60 space-y-1">
+                            <div class="font-bold text-sageDark">🩺 Biểu Hiện Thể Xác:</div>
+                            <p class="text-slateGray leading-relaxed">${data.symptoms}</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-sageLight/60 border border-sagePrimary/20 space-y-1">
+                            <div class="font-bold text-sagePrimary">🥗 Đột Phá Thực Phẩm Organic:</div>
+                            <p class="text-sageDark leading-relaxed">${data.fnbSolution}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ----------------------------------------------------
+        // MODULE 2 LOGIC: PERSONA SELECTOR
+        // ----------------------------------------------------
+        function selectPersona(num) {
+            const data = personaData[num];
+            const cardDetail = document.getElementById('personaCardDetail');
+
+            // Tab Styling
+            document.querySelectorAll('.p-tab').forEach(t => {
+                t.classList.remove('bg-white', 'text-sageDark', 'shadow-sm');
+                t.classList.add('text-slateGray');
+            });
+            const active = document.getElementById(`pTab-${num}`);
+            active.classList.add('bg-white', 'text-sageDark', 'shadow-sm');
+            active.classList.remove('text-slateGray');
+
+            // Render Detail Card
+            cardDetail.innerHTML = `
+                <div class="space-y-4 animate-fade-in">
+                    <div>
+                        <span class="px-2.5 py-1 rounded bg-sandMuted text-terraAccent font-bold text-xs">${data.role}</span>
+                        <h4 class="text-lg font-bold text-sageDark mt-2">${data.title}</h4>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-sandMuted/50">
+                            <span class="text-slateGray block">Thu Nhập Hàng Tháng:</span>
+                            <span class="font-bold text-sageDark">${data.income}</span>
+                        </div>
+                        <div class="p-3 rounded-xl bg-sandMuted/50">
+                            <span class="text-slateGray block">Ngân Sách F&B Ngày:</span>
+                            <span class="font-bold text-terraAccent">${data.budget}</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div>
+                            <strong class="text-sageDark block">🎯 Động Lực Mua Hàng Cốt Lõi (JTBD):</strong>
+                            <p class="text-slateGray leading-relaxed">${data.jtbd}</p>
+                        </div>
+                        <div>
+                            <strong class="text-terraAccent block">🚧 Rào Cản Chuyển Đổi Lớn Nhất:</strong>
+                            <p class="text-slateGray leading-relaxed">${data.barriers}</p>
+                        </div>
+                        <div>
+                            <strong class="text-sagePrimary block">📍 Kênh Tiếp Cận & Điểm Chạm:</strong>
+                            <p class="text-slateGray leading-relaxed">${data.touchpoints}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Update Chart Focus
+            updatePersonaChart(num);
+        }
+
+        // ----------------------------------------------------
+        // CHART 1: BIO-RHYTHM ENERGY CHART
+        // ----------------------------------------------------
+        function initEnergyChart() {
+            const ctx = document.getElementById('energySlumpChart').getContext('2d');
+            energyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['07:30', '09:00', '11:30', '13:00 (Trưa)', '14:30 (Crash)', '16:00', '18:30', '21:00'],
+                    datasets: [
+                        {
+                            label: 'Đường Huyết Cơm Trưa Giàu GI (>70)',
+                            data: [65, 80, 75, 140, 45, 60, 70, 65],
+                            borderColor: '#C86D51',
+                            backgroundColor: 'rgba(200, 109, 81, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3
+                        },
+                        {
+                            label: 'Đường Huyết Thực Phẩm Organic GI Thấp',
+                            data: [70, 85, 80, 105, 90, 85, 80, 75],
+                            borderColor: '#3A6351',
+                            backgroundColor: 'transparent',
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + ' mg/dL';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 30,
+                            max: 160,
+                            title: { display: true, text: 'Nồng Độ Đường Huyết (mg/dL)', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ----------------------------------------------------
+        // CHART 2: PERSONA RADAR CHART
+        // ----------------------------------------------------
+        function initPersonaChart() {
+            const ctx = document.getElementById('personaChart').getContext('2d');
+            personaChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Nhạy Cảm Giá', 'Yêu Cầu Tốc Độ', 'Ý Thức Sức Khỏe', 'Chuộng Vị Đậm Đà', 'Ủng Hộ B2B/Sub'],
+                    datasets: [
+                        {
+                            label: 'Gen Z (P1)',
+                            data: [90, 85, 60, 95, 40],
+                            borderColor: '#C86D51',
+                            backgroundColor: 'rgba(200, 109, 81, 0.2)'
+                        },
+                        {
+                            label: 'Mid-Manager (P2)',
+                            data: [40, 90, 90, 70, 95],
+                            borderColor: '#3A6351',
+                            backgroundColor: 'rgba(58, 99, 81, 0.2)'
+                        },
+                        {
+                            label: 'Special Diet (P3)',
+                            data: [50, 60, 100, 50, 80],
+                            borderColor: '#2B2D42',
+                            backgroundColor: 'rgba(43, 45, 66, 0.1)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#EAE5D9' },
+                            grid: { color: '#EAE5D9' },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updatePersonaChart(personaNum) {
+            if (!personaChartInstance) return;
+            // Highlight specific dataset
+            personaChartInstance.data.datasets.forEach((ds, idx) => {
+                if (idx === (personaNum - 1)) {
+                    ds.borderWidth = 3;
+                } else {
+                    ds.borderWidth = 1;
+                }
+            });
+            personaChartInstance.update();
+        }
+
+        // ----------------------------------------------------
+        // CHART 3: PRICE SENSITIVITY METER (PSM) CHART
+        // ----------------------------------------------------
+        function initPSMChart() {
+            const ctx = document.getElementById('psmChart').getContext('2d');
+            psmChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['40k', '55k', '65k', '75k', '85k', '110k', '135k', '150k+'],
+                    datasets: [
+                        {
+                            label: 'Nghi Nghiờ Chất Lượng (Quá Rẻ)',
+                            data: [85, 55, 20, 5, 0, 0, 0, 0],
+                            borderColor: '#C86D51',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Rẻ Rẻ / Hợp Lý',
+                            data: [15, 45, 80, 85, 70, 20, 5, 0],
+                            borderColor: '#3A6351',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Bắt Đầu Đắt (High)',
+                            data: [0, 5, 15, 30, 65, 85, 90, 95],
+                            borderColor: '#2B2D42',
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                        annotation: {
+                            // Highlight Sweet Spot Range 65k-85k
+                        }
+                    },
+                    scales: {
+                        y: {
+                            title: { display: true, text: '% Người Tiêu Dùng Đồng Ý', font: { size: 10 } },
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // ----------------------------------------------------
+        // PRICE SIMULATOR LOGIC
+        // ----------------------------------------------------
+        function calculatePriceSimulator() {
+            const type = document.getElementById('simType').value;
+            const price = parseInt(document.getElementById('simPriceRange').value);
+            document.getElementById('simPriceVal').innerText = price.toLocaleString('vi-VN') + ' VNĐ';
+
+            const output = document.getElementById('simOutput');
+
+            if (type === 'main') {
+                if (price < 40000) {
+                    output.innerHTML = `
+                        <div class="font-bold text-terraAccent">⚠️ Vùng Hoài Nghi Chất Lượng (&lt;40.000 VNĐ)</div>
+                        <p class="text-slateGray">Khách hàng mặc định bạn dùng rau củ tồn dư hóa chất chợ đầu mối. Tỷ lệ hoài nghi tẩy xanh: <strong>85%</strong>.</p>
+                    `;
+                } else if (price >= 40000 && price < 65000) {
+                    output.innerHTML = `
+                        <div class="font-bold text-sageDark">🟢 Vùng Giá Bình Dân Hóa (40.000 - 65.000 VNĐ)</div>
+                        <p class="text-slateGray">Cạnh tranh trực tiếp với cơm trưa văn phòng thông thường. Biên lợi nhuận gộp hữu cơ sẽ bị ép rất mỏng.</p>
+                    `;
+                } else if (price >= 65000 && price <= 85000) {
+                    output.innerHTML = `
+                        <div class="font-bold text-sagePrimary">⭐ Điểm Ngọt Thị Trường (Sweet Spot: 65.000 - 85.000 VNĐ)</div>
+                        <p class="text-slateGray">Mức chi trả lý tưởng nhất! Khoản chênh 15k-20k so với cơm thường được xem là "phí đầu tư sức khỏe lâu dài". Tỷ lệ chuyển đổi cao nhất!</p>
+                    `;
+                } else if (price > 85000 && price <= 135000) {
+                    output.innerHTML = `
+                        <div class="font-bold text-charcoalText">🔷 Ngưỡng Cân Cắt Cao Cấp (110.000 - 135.000 VNĐ)</div>
+                        <p class="text-slateGray">Chỉ Persona 2 & 3 chấp nhận mua thường xuyên. Yêu cầu chứng nhận USDA Organic trực tiếp + Bao bì sang trọng.</p>
+                    `;
+                } else {
+                    output.innerHTML = `
+                        <div class="font-bold text-terraAccent">⛔ Rào Cản Kháng Cự (&gt;150.000 VNĐ)</div>
+                        <p class="text-slateGray">Tần suất mua hàng sụt giảm mạnh từ "hằng ngày" sang "thưởng thức dịp đặc biệt" (1 lần/tháng).</p>
+                    `;
+                }
+            } else {
+                // Snack / Drink
+                if (price < 25000) {
+                    output.innerHTML = `
+                        <div class="font-bold text-terraAccent">⚠️ Hoài Nghi Đồ Uống Công Nghiệp (&lt;25.000 VNĐ)</div>
+                        <p class="text-slateGray">Nghi ngờ nước ép pha đường hóa học hoặc kombucha lên men xưởng kém vệ sinh.</p>
+                    `;
+                } else if (price >= 25000 && price <= 48000) {
+                    output.innerHTML = `
+                        <div class="font-bold text-sagePrimary">⭐ Điểm Ngọt Đồ Uống Xế (38.000 - 48.000 VNĐ)</div>
+                        <p class="text-slateGray">Tương đương 1 ly trà sữa/cà phê chuỗi. Dễ dàng lôi kéo mua chung tập thể vào cữ 14:30 chiều!</p>
+                    `;
+                } else {
+                    output.innerHTML = `
+                        <div class="font-bold text-charcoalText">🔷 Phân Phân Khúc Cao Cấp (&gt;55.000 VNĐ)</div>
+                        <p class="text-slateGray">Chỉ bán tốt khi đi kèm combo bữa ăn chính hoặc gói subscription tuần.</p>
+                    `;
+                }
+            }
+        }
+
+        // ----------------------------------------------------
+        // MODEL COMPARISON MATRIX HIGHLIGHT LOGIC
+        // ----------------------------------------------------
+        function highlightModel(modelNum) {
+            document.querySelectorAll('.col-1, .col-2, .col-3').forEach(td => {
+                td.classList.remove('bg-amber-100/50', 'ring-2', 'ring-sagePrimary');
+            });
+
+            document.querySelectorAll(`.col-${modelNum}`).forEach(td => {
+                td.classList.add('bg-amber-100/50');
+            });
+        }
+
+        // ----------------------------------------------------
+        // ACCORDION LOGIC FOR PITFALLS
+        // ----------------------------------------------------
+        function toggleAccordion(id) {
+            const body = document.getElementById(`accBody-${id}`);
+            const icon = document.getElementById(`accIcon-${id}`);
+
+            if (body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                icon.innerText = '━';
+            } else {
+                body.classList.add('hidden');
+                icon.innerText = '┼';
+            }
+        }
+
+        // ----------------------------------------------------
+        // QR MODAL TOGGLE
+        // ----------------------------------------------------
+        function toggleQRModal() {
+            const modal = document.getElementById('qrModal');
+            modal.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
